@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:nitroplanter/pages/PlantComponent.dart';
+// import 'package:nitroplanter/pages/PlantComponent.dart';
 import 'package:nitroplanter/pages/album.dart';
 import 'package:nitroplanter/pages/home.dart';
 import 'package:nitroplanter/pages/menu2.dart';
@@ -87,7 +88,8 @@ class _FirstMenuState extends State<FirstMenu> {
               flex: 1,
             ),
             Expanded(
-              child: PlantComponent(),
+              // child: PlantComponent(),
+              child: ListPlantComponent(),
               flex: 4,
             ),
             //expanded 2
