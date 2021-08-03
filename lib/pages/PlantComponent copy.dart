@@ -3,10 +3,6 @@ import 'dart:async';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 
-dataSaya(id) {
-  return id;
-}
-
 class ListPlantComponent extends StatefulWidget {
   const ListPlantComponent({Key? key}) : super(key: key);
 
@@ -17,20 +13,22 @@ class ListPlantComponent extends StatefulWidget {
 class _ListPlantComponentState extends State<ListPlantComponent> {
   late Future<List> _future;
   late Future<List> _listPlant;
-
-  // late List data;
-  // late int nilai = ;
+  late List data;
   @override
   void initState() {
+    super.initState();
     _future = getData();
     _listPlant = getParameter();
-    super.initState();
-    // print(_future);
   }
 
   Future<List> getData() async {
     final response = await http
         .get(Uri.parse("http://192.168.43.7/nitroplanter/get_plant.php"));
+    // _future = getData();
+
+    setState(() {
+      // _future = getData();
+    });
     return json.decode(response.body);
   }
 
@@ -38,13 +36,11 @@ class _ListPlantComponentState extends State<ListPlantComponent> {
     final response = await http.get(
         Uri.parse("http://192.168.43.7/nitroplanter/get_plant_parameter.php"));
     setState(() {
-      // _listPlant = getData();
+      // _listPlant = getParameter();
     });
     // print(json.decode(response.body));
     return json.decode(response.body);
   }
-
-  // Stream.fromFuture(_future);
 
   @override
   Widget build(BuildContext context) {
@@ -53,8 +49,7 @@ class _ListPlantComponentState extends State<ListPlantComponent> {
         future: Future.wait([_future, _listPlant]),
         builder: (context, snapshot) {
           if (snapshot.hasError) print(snapshot.error);
-          // if (snapshot.hasData) print(snapshot.hasData);
-          // print(snapshot.data![0]);
+          if (snapshot.hasData) print(snapshot.hasData);
           return snapshot.hasData
               ? PlantComponent(
                   list: snapshot.data![0] ?? [],
@@ -88,29 +83,6 @@ class _PlantComponentState extends State<PlantComponent> {
     // print(widget.list);
   }
 
-  var nilai;
-  getData() async {
-    // late List nilai;
-    var response = await http
-        .get(Uri.parse("http://192.168.43.7/nitroplanter/get_plant.php"));
-    response = await http
-        .get(Uri.parse("http://192.168.43.7/nitroplanter/get_plant.php"));
-    nilai = jsonDecode(response.body);
-    // print(nilai);
-    return nilai;
-  }
-
-  getDataLagi() async {
-    // late List nilai;
-    var response = await http
-        .get(Uri.parse("http://192.168.43.7/nitroplanter/get_plant.php"));
-    response = await http
-        .get(Uri.parse("http://192.168.43.7/nitroplanter/get_plant.php"));
-    nilai = jsonDecode(response.body);
-    // print(nilai);
-    return nilai;
-  }
-
   editDataTrial(id, plant, schedule) {
     print(id + plant + schedule);
     // var url = "http://192.168.43.7/nitroplanter/editdata.php";
@@ -118,11 +90,14 @@ class _PlantComponentState extends State<PlantComponent> {
     //     body: {"id": id, "plant": plant, "schedule": schedule});
   }
 
-  editData(id, plant, schedule) async {
+  editData(id, plant, schedule) {
     // print(id + plant + schedule);
     var url = "http://192.168.43.7/nitroplanter/editdata.php";
     http.post(Uri.parse(url),
         body: {"id": id, "plant": plant, "schedule": schedule});
+    setState(() {
+      initState();
+    });
   }
 
   // late List data;
@@ -130,6 +105,7 @@ class _PlantComponentState extends State<PlantComponent> {
   double _x = 0;
   Offset position = Offset(100, 100);
   // Offset position = Offset(100, 100);
+
   var myInitialPlant = 'Anturium';
   List<String> myPlant = [
     'Anturium',
@@ -150,11 +126,6 @@ class _PlantComponentState extends State<PlantComponent> {
 
   @override
   Widget build(BuildContext context) {
-    // List coba = widget.list;
-    // print(coba);
-    // print('object');
-    // String dataPlant = '';
-
     return ListView.builder(
         // ignore: unnecessary_null_comparison
         itemCount: widget.list == null ? 0 : widget.list.length,
@@ -232,8 +203,6 @@ class _PlantComponentState extends State<PlantComponent> {
                               underline: SizedBox(),
                               isExpanded: true,
                               value: widget.list[i]['plant'].toString(),
-
-                              //widget.list
                               // value: selectedName,
                               // hint: Text("pilih tanaman"),
                               items: widget.plant.map((items) {
@@ -247,28 +216,20 @@ class _PlantComponentState extends State<PlantComponent> {
                               onChanged: (
                                 value,
                               ) {
-                                // print(dataSaya(1));
                                 selectedName = value.toString();
-                                // print(value.toString());
-                                // getData();
+                                print(value.toString());
                                 setState(() {
-                                  // print(getData());
-
-                                  editData(
-                                      widget.list[i]['id'],
-                                      value.toString(),
-                                      widget.list[i]['schedule']);
-                                  getData();
-                                  getDataLagi();
-                                  // Data();
                                   editDataTrial('1', 'anu', 'ono');
                                   editDataTrial(
                                       widget.list[i]['id'],
                                       value.toString(),
                                       widget.list[i]['schedule']);
-                                  print(nilai);
+                                  editData(
+                                      widget.list[i]['id'],
+                                      value.toString(),
+                                      widget.list[i]['schedule']);
 
-                                  // print(value.toString());
+                                  print(value.toString());
                                   // selectedName = 'tanaman 3';
                                   // widget.plant;
                                 });
@@ -314,7 +275,7 @@ class _PlantComponentState extends State<PlantComponent> {
                               isExpanded: true,
                               onChanged: (value) {
                                 myInitialSchedule = value.toString();
-                                // print(myInitialSchedule);
+                                print(myInitialSchedule);
                                 setState(() {});
                               },
 

@@ -4,7 +4,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 // ignore: import_of_legacy_library_into_null_safe
 import 'package:http/http.dart' as http;
-import 'package:nitroplanter/pages/home.dart';
+import 'package:nitroplanter/pages/menu1.dart';
 import './Detail.dart';
 import './adddata.dart';
 
@@ -33,6 +33,7 @@ class _HomeState extends State<Home> {
   Future<List> getData() async {
     final response =
         await http.get(Uri.parse("http://192.168.43.7/my_store/getdata.php"));
+    setState(() {});
     return json.decode(response.body);
   }
 
@@ -84,22 +85,38 @@ class ItemList extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return new ListView.builder(
-      // ignore: unnecessary_null_comparison
-      itemCount: list == null ? 0 : list.length,
-      itemBuilder: (context, i) {
-        return new Container(
-          padding: const EdgeInsets.all(10.0),
-          child: new GestureDetector(
-            onTap: () => Navigator.of(context).push(new MaterialPageRoute(
-                builder: (BuildContext context) => new Detail(
-                      list: list,
-                      index: i,
-                    ))),
-            child: hasiL(i),
+    return Column(
+      children: [
+        Expanded(
+          flex: 1,
+          child: IconButton(
+              onPressed: () {
+                Navigator.pushReplacement(context,
+                    MaterialPageRoute(builder: (contex) => FirstMenu()));
+              },
+              icon: const Icon(Icons.arrow_back)),
+        ),
+        Expanded(
+          flex: 10,
+          child: new ListView.builder(
+            // ignore: unnecessary_null_comparison
+            itemCount: list == null ? 0 : list.length,
+            itemBuilder: (context, i) {
+              return new Container(
+                padding: const EdgeInsets.all(10.0),
+                child: new GestureDetector(
+                  onTap: () => Navigator.of(context).push(new MaterialPageRoute(
+                      builder: (BuildContext context) => new Detail(
+                            list: list,
+                            index: i,
+                          ))),
+                  child: hasiL(i),
+                ),
+              );
+            },
           ),
-        );
-      },
+        ),
+      ],
     );
   }
 }
