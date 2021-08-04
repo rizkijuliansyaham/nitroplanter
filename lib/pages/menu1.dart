@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:nitroplanter/pages/PlantComponent.dart';
+import 'package:nitroplanter/pages/ListPlant.dart';
 // import 'package:nitroplanter/pages/PlantComponent.dart';
 import 'package:nitroplanter/pages/album.dart';
 import 'package:nitroplanter/pages/home.dart';
