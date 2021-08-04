@@ -21,6 +21,8 @@ class _PlantComponentState extends State<PlantComponent> {
   // late int nilai;
   late List<String> selectedPlant;
   late List<String> selectedSchedule;
+  late List<TextEditingController> _controllersPlant;
+  late List<TextEditingController> _controllersWater;
 
   @override
   void initState() {
@@ -28,6 +30,14 @@ class _PlantComponentState extends State<PlantComponent> {
     selectedPlant = List<String>.generate(widget.list.length, (counter) => "");
     selectedSchedule =
         List<String>.generate(widget.list.length, (counter) => "");
+    _controllersPlant = List.generate(
+        widget.list.length,
+        (counter) =>
+            TextEditingController(text: widget.list[counter]['plant']));
+    _controllersWater = List.generate(
+        widget.list.length,
+        (counter) =>
+            TextEditingController(text: widget.list[counter]['water_amount']));
   }
 
   editDataTrial(id, plant, schedule) {
@@ -37,6 +47,11 @@ class _PlantComponentState extends State<PlantComponent> {
   editDataPlant(id, plant) async {
     var url = "http://192.168.43.7/nitroplanter/editdataPlant.php";
     http.post(Uri.parse(url), body: {"id": id, "plant": plant});
+  }
+
+  editDataWater(id, waterAmount) async {
+    var url = "http://192.168.43.7/nitroplanter/editWaterAmount.php";
+    http.post(Uri.parse(url), body: {"id": id, "water_amount": waterAmount});
   }
 
   editDataSchedule(id, schedule) async {
@@ -72,7 +87,7 @@ class _PlantComponentState extends State<PlantComponent> {
             child: Stack(
               children: <Widget>[
                 Container(
-                  height: 280,
+                  height: 300,
                   margin: EdgeInsets.all(20),
                   padding:
                       EdgeInsets.only(top: 20, bottom: 20, left: 20, right: 15),
@@ -112,48 +127,35 @@ class _PlantComponentState extends State<PlantComponent> {
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           Text(
-                            'Pilih Tanaman',
+                            'Nama Tanaman',
                             style: TextStyle(
                               fontSize: 15,
                             ),
                           ),
                           Container(
                             height: 40,
-                            width: 170,
+                            width: 150,
                             padding: EdgeInsets.all(7),
                             decoration: BoxDecoration(
                               borderRadius: BorderRadius.circular(17),
                               color: Color.fromRGBO(78, 204, 111, 1),
                             ),
-                            child: DropdownButton(
-                              icon: Icon(
-                                // Add this
-                                Icons.arrow_drop_down, // Add this
-                                color: Colors.white,
-                              ),
-                              dropdownColor: Color.fromRGBO(78, 204, 111, 1),
-                              underline: SizedBox(),
-                              isExpanded: true,
-                              // ignore: unnecessary_null_comparison
-                              value: selectedPlant[i].isEmpty
-                                  ? widget.list[i]['plant'].toString()
-                                  : selectedPlant[i].toString(),
-
-                              items: widget.plant.map((items) {
-                                return DropdownMenuItem(
-                                    value: items['plant'].toString(),
-                                    child: Text(items['plant'].toString(),
-                                        style: TextStyle(
-                                            color: Colors.white,
-                                            fontSize: 15)));
-                              }).toList(),
-                              onChanged: (value) {
-                                selectedPlant[i] = value.toString();
-                                setState(() {
-                                  editDataPlant(
-                                      widget.list[i]['id'], value.toString());
-                                });
+                            child: Focus(
+                              onFocusChange: (value) {
+                                print(_controllersPlant[i].text);
+                                print(widget.list[i]['id']);
+                                editDataPlant(widget.list[i]['id'],
+                                    _controllersPlant[i].text);
                               },
+                              child: TextField(
+                                  controller: _controllersPlant[i],
+                                  style: TextStyle(color: Colors.white),
+                                  decoration: InputDecoration(
+                                      contentPadding:
+                                          EdgeInsets.only(left: 0, top: 10),
+                                      border: OutlineInputBorder(
+                                        borderSide: BorderSide.none,
+                                      ))),
                             ),
                           ),
                         ],
@@ -163,10 +165,7 @@ class _PlantComponentState extends State<PlantComponent> {
                       ),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        // crossAxisAlignment: CrossAxisAlignment.center,
                         children: [
-                          // SizedBox(width: 50), // give it width
-
                           Text(
                             'Pilih Jadwal',
                             style: TextStyle(
@@ -177,7 +176,7 @@ class _PlantComponentState extends State<PlantComponent> {
                           ),
                           Container(
                             height: 40,
-                            width: 170,
+                            width: 150,
                             padding: EdgeInsets.all(7),
                             decoration: BoxDecoration(
                               borderRadius: BorderRadius.circular(17),
@@ -211,13 +210,6 @@ class _PlantComponentState extends State<PlantComponent> {
                                       widget.list[i]['id'], value.toString());
                                 });
                               },
-
-                              // items: generateItems(persons),
-                              // onChanged: (item) {
-                              //   setState(() {
-                              //     selectedPerson = item;
-                              //   });
-                              // },
                             ),
                           ),
                         ],
@@ -227,146 +219,54 @@ class _PlantComponentState extends State<PlantComponent> {
                       ),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        // crossAxisAlignment: CrossAxisAlignment.center,
                         children: [
-                          // SizedBox(width: 50), // give it width
-
-                          Expanded(
-                            flex: 3,
-                            child: Text(
-                              'Banyak Air',
-                              style: TextStyle(
-                                fontSize: 15,
-                                // fontWeight: FontWeight.w800,
-                                // color: Color.fromRGBO(78, 204, 111, 1),
-                              ),
+                          Text(
+                            'Banyak Air',
+                            style: TextStyle(
+                              fontSize: 15,
                             ),
                           ),
-
-                          Expanded(
-                            flex: 4,
+                          Container(
+                            width: 150,
                             child: Row(
-                              mainAxisAlignment: MainAxisAlignment.end,
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              // crossAxisAlignment: CrossAxisAlignment.center,
                               children: [
+                                Text('data'),
                                 Container(
-                                  height: 15,
-                                  // width: 100,
-                                  child: Stack(
-                                    children: [
-                                      Center(
-                                        child: Container(
-                                          width: 100,
-                                          height: 5,
-                                          color: Colors.grey.withAlpha(100),
-                                        ),
-                                      ),
-                                      Column(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.center,
-                                        children: [
-                                          AnimatedContainer(
-                                            duration: Duration(seconds: 1),
-                                            width: (double.parse(widget.list[i][
-                                                                'water_amount']) +
-                                                            15)
-                                                        .toDouble() <
-                                                    100
-                                                ? (double.parse(widget.list[i]
-                                                        ['water_amount']) +
-                                                    5)
-                                                : 100,
-                                            height: 5,
-                                            color: Colors.blue.withAlpha(100),
-                                          ),
-                                        ],
-                                      ),
-                                      Positioned(
-                                        // left: MediaQuery.of(context)
-                                        //     .devicePixelRatio,
-                                        // left: _x < 85 ? _x : 85.1,
-                                        left: double.parse(widget.list[i]
-                                                    ['water_amount']) <
-                                                85
-                                            ? double.parse(
-                                                widget.list[i]['water_amount'])
-                                            : 85.1,
-                                        child: Draggable(
-                                          axis: Axis.horizontal,
-                                          onDragEnd: (dragDetails) {
-                                            // _x = (dragDetails.offset.dx - 160) >
-                                            //         0
-                                            //     ? dragDetails.offset.dx - 160
-                                            //     : 0;
-
-                                            setState(() {
-                                              print(dragDetails.offset.dx);
-                                              print(MediaQuery.of(context)
-                                                  .devicePixelRatio);
-                                            });
-                                          },
-                                          childWhenDragging: Container(
-                                            width: 15,
-                                            height: 15,
-                                            decoration: BoxDecoration(
-                                              color: Colors.blue[600],
-                                              borderRadius:
-                                                  BorderRadius.circular(20),
-                                            ),
-                                          ),
-                                          child: Container(
-                                            width: 15,
-                                            height: 15,
-                                            decoration: BoxDecoration(
-                                              color: Colors.blue[600],
-                                              borderRadius:
-                                                  BorderRadius.circular(20),
-                                            ),
-                                          ),
-                                          feedback: Container(
-                                            width: 15,
-                                            height: 15,
-                                            decoration: BoxDecoration(
-                                              color: Colors.blue[600],
-                                              borderRadius:
-                                                  BorderRadius.circular(20),
-                                            ),
-                                          ),
-                                        ),
-                                      )
-
-                                      //edit progress bar
-                                    ],
+                                  height: 40,
+                                  width: 80,
+                                  padding: EdgeInsets.all(7),
+                                  decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(17),
+                                    color: Color.fromRGBO(78, 204, 111, 1),
+                                  ),
+                                  child: Focus(
+                                    onFocusChange: (value) {
+                                      print(_controllersWater[i].text);
+                                      print(widget.list[i]['id']);
+                                      editDataWater(widget.list[i]['id'],
+                                          _controllersWater[i].text);
+                                    },
+                                    child: TextField(
+                                        keyboardType: TextInputType.name,
+                                        controller: _controllersWater[i],
+                                        style: TextStyle(color: Colors.white),
+                                        textAlign: TextAlign.center,
+                                        decoration: InputDecoration(
+                                            contentPadding: EdgeInsets.only(
+                                                left: 0, top: 10),
+                                            border: OutlineInputBorder(
+                                              borderSide: BorderSide.none,
+                                            ))),
                                   ),
                                 ),
-                              ],
-                            ),
-                          ),
-                          // Expanded(flex: 1, child: SizedBox()),
-                          Expanded(
-                            flex: 2,
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.end,
-                              children: <Widget>[
-                                SizedBox(width: 5),
-                                Text(
-                                  // ((_x / 85 * 100) - 1).toDouble() < 100
-                                  //     ? ((_x / 85 * 100)).toStringAsFixed(0)
-                                  //     : 100.toString(),
-                                  (double.parse(
-                                              widget.list[i]['water_amount']) +
-                                          5)
-                                      .toStringAsFixed(0),
-                                  style: TextStyle(fontSize: 10),
-                                ),
-                                Text(
-                                  'mm',
-                                  style: TextStyle(fontSize: 10),
-                                ),
+                                Text('data'),
                               ],
                             ),
                           ),
                         ],
-                      ),
+                      )
                     ],
                   ),
                 ),
