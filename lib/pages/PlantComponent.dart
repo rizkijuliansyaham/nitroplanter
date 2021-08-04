@@ -17,13 +17,15 @@ class ListPlantComponent extends StatefulWidget {
 class _ListPlantComponentState extends State<ListPlantComponent> {
   late Future<List> _future;
   late Future<List> _listPlant;
+  late Future<List> _listSchedule;
 
   // late List data;
   // late int nilai = ;
   @override
   void initState() {
     _future = getData();
-    _listPlant = getParameter();
+    _listPlant = getParameterPlant();
+    _listSchedule = getParameterSchedule();
     super.initState();
     // print(_future);
   }
@@ -34,9 +36,19 @@ class _ListPlantComponentState extends State<ListPlantComponent> {
     return json.decode(response.body);
   }
 
-  Future<List> getParameter() async {
+  Future<List> getParameterPlant() async {
     final response = await http.get(
         Uri.parse("http://192.168.43.7/nitroplanter/get_plant_parameter.php"));
+    setState(() {
+      // _listPlant = getData();
+    });
+    // print(json.decode(response.body));
+    return json.decode(response.body);
+  }
+
+  Future<List> getParameterSchedule() async {
+    final response = await http.get(Uri.parse(
+        "http://192.168.43.7/nitroplanter/get_schedule_parameter.php"));
     setState(() {
       // _listPlant = getData();
     });
@@ -50,7 +62,7 @@ class _ListPlantComponentState extends State<ListPlantComponent> {
   Widget build(BuildContext context) {
     return Container(
       child: FutureBuilder<List>(
-        future: Future.wait([_future, _listPlant]),
+        future: Future.wait([_future, _listPlant, _listSchedule]),
         builder: (context, snapshot) {
           if (snapshot.hasError) print(snapshot.error);
           // if (snapshot.hasData) print(snapshot.hasData);
@@ -59,6 +71,7 @@ class _ListPlantComponentState extends State<ListPlantComponent> {
               ? PlantComponent(
                   list: snapshot.data![0] ?? [],
                   plant: snapshot.data![1] ?? [],
+                  schedule: snapshot.data![2] ?? [],
                 )
               : Center(
                   child: CircularProgressIndicator(),
@@ -72,43 +85,30 @@ class _ListPlantComponentState extends State<ListPlantComponent> {
 class PlantComponent extends StatefulWidget {
   final List list;
   final List plant;
+  final List schedule;
   // PlantComponent({required this.list});
-  const PlantComponent({Key? key, required this.list, required this.plant})
-      : super(key: key);
+  const PlantComponent({
+    Key? key,
+    required this.list,
+    required this.plant,
+    required this.schedule,
+  }) : super(key: key);
 
   @override
   _PlantComponentState createState() => _PlantComponentState();
 }
 
 class _PlantComponentState extends State<PlantComponent> {
+  // late int nilai;
+  late List<String> selectedPlant;
+  late List<String> selectedSchedule;
+
   @override
   void initState() {
     super.initState();
-    // print(widget.plant[1]['plant']);
-    // print(widget.list);
-  }
-
-  var nilai;
-  getData() async {
-    // late List nilai;
-    var response = await http
-        .get(Uri.parse("http://192.168.43.7/nitroplanter/get_plant.php"));
-    response = await http
-        .get(Uri.parse("http://192.168.43.7/nitroplanter/get_plant.php"));
-    nilai = jsonDecode(response.body);
-    // print(nilai);
-    return nilai;
-  }
-
-  getDataLagi() async {
-    // late List nilai;
-    var response = await http
-        .get(Uri.parse("http://192.168.43.7/nitroplanter/get_plant.php"));
-    response = await http
-        .get(Uri.parse("http://192.168.43.7/nitroplanter/get_plant.php"));
-    nilai = jsonDecode(response.body);
-    // print(nilai);
-    return nilai;
+    selectedPlant = List<String>.generate(widget.list.length, (counter) => "");
+    selectedSchedule =
+        List<String>.generate(widget.list.length, (counter) => "");
   }
 
   editDataTrial(id, plant, schedule) {
@@ -118,15 +118,17 @@ class _PlantComponentState extends State<PlantComponent> {
     //     body: {"id": id, "plant": plant, "schedule": schedule});
   }
 
-  editData(id, plant, schedule) async {
-    // print(id + plant + schedule);
-    var url = "http://192.168.43.7/nitroplanter/editdata.php";
-    http.post(Uri.parse(url),
-        body: {"id": id, "plant": plant, "schedule": schedule});
+  editDataPlant(id, plant) async {
+    var url = "http://192.168.43.7/nitroplanter/editdataPlant.php";
+    http.post(Uri.parse(url), body: {"id": id, "plant": plant});
+  }
+
+  editDataSchedule(id, schedule) async {
+    var url = "http://192.168.43.7/nitroplanter/editdataSchedule.php";
+    http.post(Uri.parse(url), body: {"id": id, "schedule": schedule});
   }
 
   // late List data;
-  late String selectedName;
   double _x = 0;
   Offset position = Offset(100, 100);
   // Offset position = Offset(100, 100);
@@ -148,9 +150,18 @@ class _PlantComponentState extends State<PlantComponent> {
     'Minggu',
   ];
 
+  // List<String> selectedPlant = ['', ''];
+
+  // List<String> selectedPlant =
+  //     List<String>.filled(widget.list.length, 0, growable: true);
+// List
   @override
   Widget build(BuildContext context) {
+    // List<String> selectedPlant = ['', ''];
+
     // List coba = widget.list;
+    // List<String> selectedPlant = [];
+
     // print(coba);
     // print('object');
     // String dataPlant = '';
@@ -231,46 +242,24 @@ class _PlantComponentState extends State<PlantComponent> {
                               dropdownColor: Color.fromRGBO(78, 204, 111, 1),
                               underline: SizedBox(),
                               isExpanded: true,
-                              value: widget.list[i]['plant'].toString(),
+                              // ignore: unnecessary_null_comparison
+                              value: selectedPlant[i].isEmpty
+                                  ? widget.list[i]['plant'].toString()
+                                  : selectedPlant[i].toString(),
 
-                              //widget.list
-                              // value: selectedName,
-                              // hint: Text("pilih tanaman"),
                               items: widget.plant.map((items) {
                                 return DropdownMenuItem(
                                     value: items['plant'].toString(),
-                                    child: Text(items['plant'],
+                                    child: Text(items['plant'].toString(),
                                         style: TextStyle(
                                             color: Colors.white,
                                             fontSize: 15)));
                               }).toList(),
-                              onChanged: (
-                                value,
-                              ) {
-                                // print(dataSaya(1));
-                                selectedName = value.toString();
-                                // print(value.toString());
-                                // getData();
+                              onChanged: (value) {
+                                selectedPlant[i] = value.toString();
                                 setState(() {
-                                  // print(getData());
-
-                                  editData(
-                                      widget.list[i]['id'],
-                                      value.toString(),
-                                      widget.list[i]['schedule']);
-                                  getData();
-                                  getDataLagi();
-                                  // Data();
-                                  editDataTrial('1', 'anu', 'ono');
-                                  editDataTrial(
-                                      widget.list[i]['id'],
-                                      value.toString(),
-                                      widget.list[i]['schedule']);
-                                  print(nilai);
-
-                                  // print(value.toString());
-                                  // selectedName = 'tanaman 3';
-                                  // widget.plant;
+                                  editDataPlant(
+                                      widget.list[i]['id'], value.toString());
                                 });
                               },
                             ),
@@ -302,36 +291,35 @@ class _PlantComponentState extends State<PlantComponent> {
                               borderRadius: BorderRadius.circular(17),
                               color: Color.fromRGBO(78, 204, 111, 1),
                             ),
-                            child: DropdownButton<String>(
+                            child: DropdownButton(
                               // iconSize: 0,
                               icon: Icon(
                                 // Add this
                                 Icons.arrow_drop_down, // Add this
                                 color: Colors.white,
                               ),
-                              dropdownColor: Color.fromRGBO(78, 204, 111, 1),
                               underline: SizedBox(),
                               isExpanded: true,
+                              dropdownColor: Color.fromRGBO(78, 204, 111, 1),
+                              value: selectedSchedule[i].isEmpty
+                                  ? widget.list[i]['schedule'].toString()
+                                  : selectedSchedule[i].toString(),
+                              items: widget.schedule.map((items) {
+                                return DropdownMenuItem(
+                                    value: items['schedule'].toString(),
+                                    child: Text(items['schedule'].toString(),
+                                        style: TextStyle(
+                                            color: Colors.white,
+                                            fontSize: 15)));
+                              }).toList(), // value: selectedPerson,
                               onChanged: (value) {
-                                myInitialSchedule = value.toString();
-                                // print(myInitialSchedule);
-                                setState(() {});
+                                selectedSchedule[i] = value.toString();
+                                setState(() {
+                                  editDataSchedule(
+                                      widget.list[i]['id'], value.toString());
+                                });
                               },
 
-                              value: myInitialSchedule.toString(),
-
-                              items: mySchedule.map((items) {
-                                if (items.isEmpty == true) {
-                                  items = 'tes';
-                                }
-                                return DropdownMenuItem(
-                                    value: items,
-                                    child: Text(
-                                      items,
-                                      style: TextStyle(
-                                          color: Colors.white, fontSize: 15),
-                                    ));
-                              }).toList(), // value: selectedPerson,
                               // items: generateItems(persons),
                               // onChanged: (item) {
                               //   setState(() {
@@ -401,6 +389,9 @@ class _PlantComponentState extends State<PlantComponent> {
                                         ],
                                       ),
                                       Positioned(
+                                        // left: MediaQuery.of(context)
+                                        //     .devicePixelRatio,
+                                        // left: _x < 85 ? _x : 85.1,
                                         left: double.parse(widget.list[i]
                                                     ['water_amount']) <
                                                 85
@@ -410,12 +401,16 @@ class _PlantComponentState extends State<PlantComponent> {
                                         child: Draggable(
                                           axis: Axis.horizontal,
                                           onDragEnd: (dragDetails) {
-                                            _x = (dragDetails.offset.dx - 168) >
-                                                    0
-                                                ? dragDetails.offset.dx - 168
-                                                : 0;
+                                            // _x = (dragDetails.offset.dx - 160) >
+                                            //         0
+                                            //     ? dragDetails.offset.dx - 160
+                                            //     : 0;
 
-                                            setState(() {});
+                                            setState(() {
+                                              print(dragDetails.offset.dx);
+                                              print(MediaQuery.of(context)
+                                                  .devicePixelRatio);
+                                            });
                                           },
                                           childWhenDragging: Container(
                                             width: 15,
