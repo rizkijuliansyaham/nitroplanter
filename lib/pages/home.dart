@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:nitroplanter/pages/info/InfoCard.dart';
 import 'package:nitroplanter/pages/schedule/ScheduleCard.dart';
 import 'package:nitroplanter/pages/monitoring/monitoringCard.dart';
 
@@ -27,7 +28,7 @@ class _MainMenuState extends State<MainMenu> {
             child: Center(
                 child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
-              children: [ScheduleCard(), MonitoringCard()],
+              children: [ScheduleCard(), MonitoringCard(), InfoCard()],
             )),
             flex: 10,
           ),

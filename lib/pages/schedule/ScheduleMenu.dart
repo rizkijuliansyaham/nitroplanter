@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:nitroplanter/pages/schedule/ScheduleListPlant.dart';
-import 'package:nitroplanter/pages/home.dart';
 
 class ScheduleMenu extends StatefulWidget {
   @override
@@ -27,10 +26,7 @@ class _ScheduleMenuState extends State<ScheduleMenu> {
                       children: [
                         IconButton(
                             onPressed: () {
-                              Navigator.pushReplacement(
-                                  context,
-                                  MaterialPageRoute(
-                                      builder: (contex) => MainMenu()));
+                              Navigator.pop(context);
                             },
                             icon: const Icon(Icons.arrow_back)),
                       ],

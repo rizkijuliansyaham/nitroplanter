@@ -1,15 +1,13 @@
 import 'package:flutter/material.dart';
-import 'package:nitroplanter/pages/monitoring/MonitoringListComponent.dart';
-import 'package:nitroplanter/pages/monitoring/temperature/TemperatureComponent.dart';
 
-class MonitoringMenu extends StatefulWidget {
-  const MonitoringMenu({Key? key}) : super(key: key);
+class InfoMenu extends StatefulWidget {
+  const InfoMenu({Key? key}) : super(key: key);
 
   @override
-  _MonitoringMenuState createState() => _MonitoringMenuState();
+  _InfoMenuState createState() => _InfoMenuState();
 }
 
-class _MonitoringMenuState extends State<MonitoringMenu> {
+class _InfoMenuState extends State<InfoMenu> {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -36,27 +34,26 @@ class _MonitoringMenuState extends State<MonitoringMenu> {
                           ),
                           flex: 1),
                       Container(
-                        width: 200,
+                        width: 120,
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                           children: [
                             Image.asset(
-                              "assets/images/monitoring.png",
+                              "assets/images/info.png",
                               width: 50,
                               height: 50,
                             ),
                             Text(
-                              'Monitoring',
+                              'Info',
                               style: TextStyle(fontSize: 20),
                             )
                           ],
                         ),
                       ),
-                      Expanded(child: TemperatureComponent(), flex: 2),
                     ],
                   ),
                   flex: 2),
-              Expanded(child: MonitoringListComponent(), flex: 3),
+              Expanded(child: Placeholder(), flex: 9),
             ],
           ),
         ),

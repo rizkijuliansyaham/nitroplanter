@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:nitroplanter/pages/monitoring/monitoringMenu.dart';
+import 'package:page_transition/page_transition.dart';
 
 class MonitoringCard extends StatelessWidget {
   const MonitoringCard({Key? key}) : super(key: key);
@@ -22,12 +23,10 @@ class MonitoringCard extends StatelessWidget {
           highlightColor: Colors.red.withAlpha(20),
           splashColor: Colors.blue.withAlpha(20),
           onTap: () {
-            Navigator.pushReplacement(
-              context,
-              MaterialPageRoute(
-                builder: (context) => MonitoringMenu(),
-              ),
-            );
+            Navigator.push(
+                context,
+                PageTransition(
+                    type: PageTransitionType.fade, child: MonitoringMenu()));
           },
           child: Row(
             children: [

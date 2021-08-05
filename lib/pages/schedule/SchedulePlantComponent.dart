@@ -21,6 +21,7 @@ class _PlantComponentState extends State<SchedulePlantComponent> {
   // late int nilai;
   late List<String> selectedPlant;
   late List<String> selectedSchedule;
+  late List<String> tambahNilai;
   late List<TextEditingController> _controllersPlant;
   late List<TextEditingController> _controllersWater;
 
@@ -28,6 +29,8 @@ class _PlantComponentState extends State<SchedulePlantComponent> {
   void initState() {
     super.initState();
     selectedPlant = List<String>.generate(widget.list.length, (counter) => "");
+    tambahNilai = List<String>.generate(
+        widget.list.length, (counter) => widget.list[counter]['water_amount']);
     selectedSchedule =
         List<String>.generate(widget.list.length, (counter) => "");
     _controllersPlant = List.generate(
@@ -38,6 +41,20 @@ class _PlantComponentState extends State<SchedulePlantComponent> {
         widget.list.length,
         (counter) =>
             TextEditingController(text: widget.list[counter]['water_amount']));
+  }
+
+  addWater(i) {
+    tambahNilai[i] = (double.parse(tambahNilai[i]) + 1).toString();
+    print(tambahNilai[i]);
+    _controllersWater[i] = TextEditingController(
+        text: (double.parse(tambahNilai[i])).toStringAsFixed(0));
+  }
+
+  minWater(i) {
+    tambahNilai[i] = (double.parse(tambahNilai[i]) - 1).toString();
+    print(tambahNilai[i]);
+    _controllersWater[i] = TextEditingController(
+        text: (double.parse(tambahNilai[i])).toStringAsFixed(0));
   }
 
   editDataTrial(id, plant, schedule) {
@@ -243,7 +260,12 @@ class _PlantComponentState extends State<SchedulePlantComponent> {
                                       highlightColor: Colors.black,
                                       splashColor: Colors.black,
                                       onTap: () {
-                                        setState(() {});
+                                        setState(() {
+                                          minWater(i);
+                                          editDataWater(widget.list[i]['id'],
+                                              _controllersWater[i].text);
+                                          // print(_controllersWater[i].text);
+                                        });
                                       },
                                     ),
                                   ),
@@ -287,7 +309,12 @@ class _PlantComponentState extends State<SchedulePlantComponent> {
                                       highlightColor: Colors.black,
                                       splashColor: Colors.black,
                                       onTap: () {
-                                        setState(() {});
+                                        setState(() {
+                                          addWater(i);
+                                          editDataWater(widget.list[i]['id'],
+                                              _controllersWater[i].text);
+                                          // print(_controllersWater[i].text);
+                                        });
                                       },
                                     ),
                                   ),

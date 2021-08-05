@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:nitroplanter/pages/schedule/ScheduleMenu.dart';
+import 'package:nitroplanter/pages/info/InfoMenu.dart';
 import 'package:page_transition/page_transition.dart';
 
-class ScheduleCard extends StatelessWidget {
-  const ScheduleCard({Key? key}) : super(key: key);
+class InfoCard extends StatelessWidget {
+  const InfoCard({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -12,6 +12,8 @@ class ScheduleCard extends StatelessWidget {
       // color: Colors.amber,
       margin: const EdgeInsets.only(left: 20.0, right: 20.0, bottom: 20),
       child: Card(
+        // color: Color.fromRGBO(240, 240, 240, 0.8),
+        // color: Colors.transparent,
         margin: const EdgeInsets.only(left: 20.0, right: 20.0),
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(20),
@@ -24,24 +26,18 @@ class ScheduleCard extends StatelessWidget {
             Navigator.push(
                 context,
                 PageTransition(
-                    type: PageTransitionType.fade, child: ScheduleMenu()));
-            // Navigator.pushReplacement(
-            //   context,
-            //   MaterialPageRoute(
-            //     builder: (context) => ScheduleMenu(),
-            //   ),
-            // );
+                    type: PageTransitionType.fade, child: InfoMenu()));
           },
           child: Row(
             children: [
               Image.asset(
-                "assets/images/schedule-box.png",
+                "assets/images/info-box.png",
                 width: 89,
                 height: 89,
               ),
               SizedBox(width: 28), // give it width
               Text(
-                'Schedule',
+                'Info',
                 style: TextStyle(fontSize: 25),
               )
             ],

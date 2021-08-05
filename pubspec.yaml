@@ -33,6 +33,7 @@ dev_dependencies:
   draggable_widget: ^1.1.1
   hexcolor: ^2.0.4
   http: ^0.13.3
+  page_transition: ^2.0.2
   flutter_test:
     sdk: flutter
 
