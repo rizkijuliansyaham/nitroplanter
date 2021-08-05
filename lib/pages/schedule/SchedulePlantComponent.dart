@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 
-class PlantComponent extends StatefulWidget {
+class SchedulePlantComponent extends StatefulWidget {
   final List list;
   final List plant;
   final List schedule;
-  // PlantComponent({required this.list});
-  const PlantComponent({
+  // SchedulePlantComponent({required this.list});
+  const SchedulePlantComponent({
     Key? key,
     required this.list,
     required this.plant,
@@ -17,7 +17,7 @@ class PlantComponent extends StatefulWidget {
   _PlantComponentState createState() => _PlantComponentState();
 }
 
-class _PlantComponentState extends State<PlantComponent> {
+class _PlantComponentState extends State<SchedulePlantComponent> {
   // late int nilai;
   late List<String> selectedPlant;
   late List<String> selectedSchedule;
@@ -232,7 +232,22 @@ class _PlantComponentState extends State<PlantComponent> {
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               // crossAxisAlignment: CrossAxisAlignment.center,
                               children: [
-                                Text('data'),
+                                Container(
+                                  width: 30,
+                                  height: 30,
+                                  // decoration: BoxDecoration(color: Colors.blue),
+                                  child: Card(
+                                    color: Colors.blue,
+                                    child: InkWell(
+                                      borderRadius: BorderRadius.circular(4),
+                                      highlightColor: Colors.black,
+                                      splashColor: Colors.black,
+                                      onTap: () {
+                                        setState(() {});
+                                      },
+                                    ),
+                                  ),
+                                ),
                                 Container(
                                   height: 40,
                                   width: 80,
@@ -261,7 +276,22 @@ class _PlantComponentState extends State<PlantComponent> {
                                             ))),
                                   ),
                                 ),
-                                Text('data'),
+                                Container(
+                                  width: 30,
+                                  height: 30,
+                                  // decoration: BoxDecoration(color: Colors.blue),
+                                  child: Card(
+                                    color: Colors.blue,
+                                    child: InkWell(
+                                      borderRadius: BorderRadius.circular(4),
+                                      highlightColor: Colors.black,
+                                      splashColor: Colors.black,
+                                      onTap: () {
+                                        setState(() {});
+                                      },
+                                    ),
+                                  ),
+                                ),
                               ],
                             ),
                           ),

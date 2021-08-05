@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:nitroplanter/pages/menu1.dart';
+import 'package:nitroplanter/pages/schedule/ScheduleCard.dart';
+import 'package:nitroplanter/pages/monitoring/monitoringCard.dart';
 
 class MainMenu extends StatefulWidget {
   const MainMenu({Key? key}) : super(key: key);
@@ -19,59 +20,14 @@ class _MainMenuState extends State<MainMenu> {
       child: Column(
         children: [
           Expanded(
-            child: Placeholder(),
+            child: SizedBox(),
             flex: 2,
           ),
           Expanded(
             child: Center(
                 child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Container(
-                  // padding: EdgeInsets.only(left: 0),
-                  child: Container(
-                    height: 78,
-                    // color: Colors.amber,
-                    margin: const EdgeInsets.only(
-                        left: 20.0, right: 20.0, bottom: 20),
-                    child: Card(
-                      // color: Color.fromRGBO(240, 240, 240, 0.8),
-                      // color: Colors.transparent,
-                      margin: const EdgeInsets.only(left: 20.0, right: 20.0),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(20),
-                      ),
-                      child: InkWell(
-                        borderRadius: BorderRadius.circular(20),
-                        highlightColor: Colors.red.withAlpha(20),
-                        splashColor: Colors.blue.withAlpha(20),
-                        onTap: () {
-                          Navigator.pushReplacement(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => FirstMenu(),
-                            ),
-                          );
-                        },
-                        child: Row(
-                          children: [
-                            Image.asset(
-                              "assets/images/schedule-box.png",
-                              width: 89,
-                              height: 89,
-                            ),
-                            SizedBox(width: 35), // give it width
-                            Text(
-                              'Schedule',
-                              style: TextStyle(fontSize: 25),
-                            )
-                          ],
-                        ),
-                      ),
-                    ),
-                  ),
-                ),
-              ],
+              children: [ScheduleCard(), MonitoringCard()],
             )),
             flex: 10,
           ),

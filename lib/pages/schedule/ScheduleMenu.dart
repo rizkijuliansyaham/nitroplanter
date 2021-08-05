@@ -1,23 +1,13 @@
 import 'package:flutter/material.dart';
-import 'package:nitroplanter/pages/ListPlant.dart';
-// import 'package:nitroplanter/pages/PlantComponent.dart';
-import 'package:nitroplanter/pages/album.dart';
+import 'package:nitroplanter/pages/schedule/ScheduleListPlant.dart';
 import 'package:nitroplanter/pages/home.dart';
-import 'package:nitroplanter/pages/menu2.dart';
 
-// void main() => runApp(FirstMenu());
-
-class FirstMenu extends StatefulWidget {
+class ScheduleMenu extends StatefulWidget {
   @override
-  _FirstMenuState createState() => _FirstMenuState();
+  _ScheduleMenuState createState() => _ScheduleMenuState();
 }
 
-class _FirstMenuState extends State<FirstMenu> {
-  // Future<List> getData() async {
-  //   final response = await http.get("http://192.168.43.7/my_store/getdata.php");
-  //   return json.decode(response.body);
-  // }
-
+class _ScheduleMenuState extends State<ScheduleMenu> {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -43,22 +33,6 @@ class _FirstMenuState extends State<FirstMenu> {
                                       builder: (contex) => MainMenu()));
                             },
                             icon: const Icon(Icons.arrow_back)),
-                        IconButton(
-                            onPressed: () {
-                              Navigator.pushReplacement(
-                                  context,
-                                  MaterialPageRoute(
-                                      builder: (contex) => MyAlbum()));
-                            },
-                            icon: const Icon(Icons.arrow_back)),
-                        IconButton(
-                            onPressed: () {
-                              Navigator.pushReplacement(
-                                  context,
-                                  MaterialPageRoute(
-                                      builder: (contex) => Home()));
-                            },
-                            icon: const Icon(Icons.arrow_back))
                       ],
                     ),
                     flex: 2,
@@ -89,7 +63,7 @@ class _FirstMenuState extends State<FirstMenu> {
             ),
             Expanded(
               // child: PlantComponent(),
-              child: ListPlantComponent(),
+              child: ScheduleListPlantComponent(),
               flex: 4,
             ),
             //expanded 2
