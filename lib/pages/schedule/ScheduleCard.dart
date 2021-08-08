@@ -3,7 +3,23 @@ import 'package:nitroplanter/pages/schedule/ScheduleMenu.dart';
 import 'package:page_transition/page_transition.dart';
 
 class ScheduleCard extends StatelessWidget {
-  const ScheduleCard({Key? key}) : super(key: key);
+  final String token;
+  final String userId;
+  final List idData;
+  final List plant;
+  final List humidity;
+  final List waterAmount;
+  final List schedule;
+  const ScheduleCard({
+    Key? key,
+    required this.token,
+    required this.userId,
+    required this.plant,
+    required this.humidity,
+    required this.waterAmount,
+    required this.schedule,
+    required this.idData,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -21,10 +37,20 @@ class ScheduleCard extends StatelessWidget {
           highlightColor: Colors.red.withAlpha(20),
           splashColor: Colors.blue.withAlpha(20),
           onTap: () {
+            // print(idData);
             Navigator.push(
                 context,
                 PageTransition(
-                    type: PageTransitionType.fade, child: ScheduleMenu()));
+                    type: PageTransitionType.fade,
+                    child: ScheduleMenu(
+                      token: token,
+                      userId: userId,
+                      plant: plant,
+                      waterAmount: waterAmount,
+                      schedule: schedule,
+                      humidity: humidity,
+                      idData: idData,
+                    )));
             // Navigator.pushReplacement(
             //   context,
             //   MaterialPageRoute(

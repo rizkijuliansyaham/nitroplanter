@@ -1,10 +1,25 @@
 import 'package:flutter/material.dart';
-import 'package:nitroplanter/pages/monitoring/monitoringMenu.dart';
+import 'package:nitroplanter/pages/monitoring/MonitoringMenu.dart';
 import 'package:page_transition/page_transition.dart';
 
 class MonitoringCard extends StatelessWidget {
-  const MonitoringCard({Key? key}) : super(key: key);
-
+  final String token;
+  final String userId;
+  final List idData;
+  final List plant;
+  final List humidity;
+  final List waterAmount;
+  final List schedule;
+  const MonitoringCard({
+    Key? key,
+    required this.token,
+    required this.userId,
+    required this.plant,
+    required this.humidity,
+    required this.waterAmount,
+    required this.schedule,
+    required this.idData,
+  }) : super(key: key);
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -26,7 +41,16 @@ class MonitoringCard extends StatelessWidget {
             Navigator.push(
                 context,
                 PageTransition(
-                    type: PageTransitionType.fade, child: MonitoringMenu()));
+                    type: PageTransitionType.fade,
+                    child: MonitoringMenu(
+                      token: token,
+                      userId: userId,
+                      plant: plant,
+                      waterAmount: waterAmount,
+                      schedule: schedule,
+                      humidity: humidity,
+                      idData: idData,
+                    )));
           },
           child: Row(
             children: [

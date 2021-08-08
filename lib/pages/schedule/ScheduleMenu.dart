@@ -2,6 +2,23 @@ import 'package:flutter/material.dart';
 import 'package:nitroplanter/pages/schedule/ScheduleListPlant.dart';
 
 class ScheduleMenu extends StatefulWidget {
+  final String token;
+  final String userId;
+  final List idData;
+  final List plant;
+  final List humidity;
+  final List waterAmount;
+  final List schedule;
+  const ScheduleMenu({
+    Key? key,
+    required this.token,
+    required this.userId,
+    required this.plant,
+    required this.humidity,
+    required this.waterAmount,
+    required this.schedule,
+    required this.idData,
+  }) : super(key: key);
   @override
   _ScheduleMenuState createState() => _ScheduleMenuState();
 }
@@ -59,7 +76,15 @@ class _ScheduleMenuState extends State<ScheduleMenu> {
             ),
             Expanded(
               // child: PlantComponent(),
-              child: ScheduleListPlantComponent(),
+              child: ScheduleListPlantComponent(
+                token: widget.token,
+                userId: widget.userId,
+                plant: widget.plant,
+                waterAmount: widget.waterAmount,
+                schedule: widget.schedule,
+                humidity: widget.humidity,
+                idData: widget.idData,
+              ),
               flex: 4,
             ),
             //expanded 2

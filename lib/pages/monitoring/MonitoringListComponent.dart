@@ -4,19 +4,42 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 
 class MonitoringListComponent extends StatefulWidget {
-  const MonitoringListComponent({Key? key}) : super(key: key);
-
+  final String token;
+  final String userId;
+  final List idData;
+  final List plant;
+  final List humidity;
+  final List waterAmount;
+  final List schedule;
+  const MonitoringListComponent({
+    Key? key,
+    required this.token,
+    required this.userId,
+    required this.plant,
+    required this.humidity,
+    required this.waterAmount,
+    required this.schedule,
+    required this.idData,
+  }) : super(key: key);
   @override
   _MonitoringListComponentState createState() =>
       _MonitoringListComponentState();
 }
 
 class _MonitoringListComponentState extends State<MonitoringListComponent> {
-  late Future<List> _future;
+  // late Future<List> _future;
+  late Future<List> _future2;
+  late List plant = [];
+  late List waterAmount = [];
+  late List humidity = [];
+  late List schedule = [];
+  late List idData = [];
+  String urlMaster =
+      "https://nitroplanterfirebase-default-rtdb.asia-southeast1.firebasedatabase.app/";
   @override
   void initState() {
-    _future = getData();
-
+    // _future = getData();
+    _future2 = getDataFirebase();
     super.initState();
   }
 
@@ -30,11 +53,51 @@ class _MonitoringListComponentState extends State<MonitoringListComponent> {
     }
   }
 
+  Future<List> getDataFirebase() async {
+    List dataFirebase = [];
+    Uri url = Uri.parse("$urlMaster/plant_controller/" +
+        widget.userId +
+        ".json?auth=" +
+        widget.token);
+    var response = await http.get(url);
+    var mantap = jsonDecode(response.body) == null
+        ? {}
+        : jsonDecode(response.body) as Map<String, dynamic>;
+
+    // ignore: unnecessary_null_comparison
+    widget.token == null
+        ? print('tidak ada token')
+        : mantap.forEach((id, data) {
+            // ignore: unnecessary_statements
+            data['plant'] != null ? plant.add(data['plant']) : plant.add('');
+            data['humidity'] != null
+                ? humidity.add(data['humidity'])
+                : plant.add('');
+            data['schedule'] != null
+                ? schedule.add(data['schedule'])
+                : plant.add('');
+            data['water_amount'] != null
+                ? waterAmount.add(data['water_amount'])
+                : plant.add('');
+            // ignore: unnecessary_null_comparison
+            id != null ? idData.add(id) : idData.add('');
+            dataFirebase.add(data);
+            // print(data);
+          });
+    // print(dataFirebase);
+    return dataFirebase;
+
+    // print(schedule);
+  }
+
   @override
   Widget build(BuildContext context) {
     return FutureBuilder<List>(
-        future: _future,
+        future: _future2,
         builder: (context, snapshot) {
+          // print(snapshot.data!);
+          // print(snapshot.data!.length);
+
           return snapshot.hasData
               ? ListView.builder(
                   itemCount: snapshot.data!.length,
@@ -64,6 +127,7 @@ class _MonitoringListComponentState extends State<MonitoringListComponent> {
                                       fontSize: 22,
                                       fontWeight: FontWeight.w900,
                                       color: Color.fromRGBO(78, 204, 111, 1),
+                                      fontFamily: 'Montserrat',
                                     ),
                                   ),
                                   Text(
@@ -72,6 +136,7 @@ class _MonitoringListComponentState extends State<MonitoringListComponent> {
                                       fontSize: 22,
                                       fontWeight: FontWeight.w900,
                                       color: Color.fromRGBO(78, 204, 111, 1),
+                                      fontFamily: 'Montserrat',
                                     ),
                                   ),
                                 ],
@@ -86,6 +151,7 @@ class _MonitoringListComponentState extends State<MonitoringListComponent> {
                                     style: TextStyle(
                                       fontSize: 25,
                                       fontWeight: FontWeight.w800,
+                                      fontFamily: 'Montserrat',
                                     ),
                                   )
                                 ],
@@ -109,12 +175,20 @@ class _MonitoringListComponentState extends State<MonitoringListComponent> {
                                           crossAxisAlignment:
                                               CrossAxisAlignment.start,
                                           children: [
-                                            Text('Jadwal Penyiraman'),
                                             Text(
+                                              'Jadwal Penyiraman',
+                                              style: TextStyle(
+                                                fontFamily: 'Montserrat',
+                                              ),
+                                            ),
+                                            Text(
+                                              // widget.schedule[i],
                                               snapshot.data![i]['schedule'],
                                               style: TextStyle(
-                                                  fontWeight: FontWeight.w800,
-                                                  fontSize: 20),
+                                                fontWeight: FontWeight.w800,
+                                                fontSize: 20,
+                                                fontFamily: 'Montserrat',
+                                              ),
                                             ),
                                           ]),
                                       flex: 4,
@@ -142,32 +216,41 @@ class _MonitoringListComponentState extends State<MonitoringListComponent> {
                                           crossAxisAlignment:
                                               CrossAxisAlignment.start,
                                           children: [
-                                            Text('Kelembapan Tanaman'),
+                                            Text(
+                                              'Kelembapan Tanaman',
+                                              style: TextStyle(
+                                                fontFamily: 'Montserrat',
+                                              ),
+                                            ),
                                             Row(
                                               children: [
                                                 Text(
-                                                  snapshot.data![i]
-                                                          ['humidity'] +
+                                                  snapshot.data![i]['humidity']
+                                                          .toString() +
                                                       "% " +
                                                       "(",
                                                   style: TextStyle(
+                                                      fontFamily: 'Montserrat',
                                                       fontWeight:
                                                           FontWeight.w800,
                                                       fontSize: 20),
                                                 ),
                                                 Text(
-                                                    int.parse(snapshot.data![i]
-                                                                ['humidity']) <
-                                                            40
+                                                    snapshot.data![i]
+                                                                ['humidity'] >
+                                                            30
                                                         ? 'Baik'
-                                                        : 'Tidak Baik',
+                                                        : 'Tidak baik',
                                                     style: TextStyle(
+                                                        fontFamily:
+                                                            'Montserrat',
                                                         fontWeight:
                                                             FontWeight.w800,
                                                         fontSize: 20)),
                                                 Text(
                                                   ")",
                                                   style: TextStyle(
+                                                      fontFamily: 'Montserrat',
                                                       fontWeight:
                                                           FontWeight.w800,
                                                       fontSize: 20),

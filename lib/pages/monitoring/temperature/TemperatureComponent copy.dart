@@ -4,73 +4,36 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 
 class TemperatureComponent extends StatefulWidget {
-  final String token;
-  final String userId;
-  const TemperatureComponent(
-      {Key? key, required this.token, required this.userId})
-      : super(key: key);
+  const TemperatureComponent({Key? key}) : super(key: key);
 
   @override
   _TemperatureComponentState createState() => _TemperatureComponentState();
 }
 
 class _TemperatureComponentState extends State<TemperatureComponent> {
-  // late Future<List> _future;
-  late Future<List> _futureTemperature;
+  late Future<List> _future;
   @override
   void initState() {
-    // _future = getData();
-    _futureTemperature = getTemperature();
+    _future = getData();
+
     super.initState();
   }
 
-  // postTemperature() async {
-  //   await http.post(
-  //     Uri.parse(
-  //         'https://nitroplanterfirebase-default-rtdb.asia-southeast1.firebasedatabase.app/temperature/' +
-  //             widget.userId +
-  //             '.json?auth=' +
-  //             widget.token),
-  //     body: json.encode({
-  //       "temp": 25,
-  //     }),
-  //   );
-  // }
-
-  Future<List> getTemperature() async {
-    List dataFirebaseTemperature = [];
-    final response = await http.get(Uri.parse(
-        'https://nitroplanterfirebase-default-rtdb.asia-southeast1.firebasedatabase.app/temperature/' +
-            widget.userId +
-            '.json?auth=' +
-            widget.token));
-    var result = jsonDecode(response.body) == null
-        ? {
-            "data": {"temp": 0}
-          }
-        : json.decode(response.body) as Map<String, dynamic>;
-    result.forEach((id, value) {
-      dataFirebaseTemperature.add(value);
-    });
-    print(dataFirebaseTemperature);
-    return dataFirebaseTemperature;
+  Future<List> getData() async {
+    final response = await http.get(
+        Uri.parse("http://192.168.43.7/nitroplanter/get_room_temperature.php"));
+    if (response.statusCode == 200) {
+      return json.decode(response.body);
+    } else {
+      throw Exception('Failed to load ');
+    }
   }
-
-  // Future<List> getData() async {
-  //   final response = await http.get(
-  //       Uri.parse("http://192.168.43.7/nitroplanter/get_room_temperature.php"));
-  //   if (response.statusCode == 200) {
-  //     return json.decode(response.body);
-  //   } else {
-  //     throw Exception('Failed to load ');
-  //   }
-  // }
 
   @override
   Widget build(BuildContext context) {
     return Center(
       child: FutureBuilder<List>(
-          future: _futureTemperature,
+          future: _future,
           builder: (context, snapshot) {
             return snapshot.hasData
                 ? Container(
@@ -82,9 +45,6 @@ class _TemperatureComponentState extends State<TemperatureComponent> {
                     ),
                     child: Row(
                       children: [
-                        // ElevatedButton(
-                        //     onPressed: () => postTemperature(),
-                        //     child: Text('data')),
                         Expanded(
                           child: Image.asset(
                             "assets/images/thermo.png",
@@ -115,7 +75,7 @@ class _TemperatureComponentState extends State<TemperatureComponent> {
                                   children: [
                                     Text(
                                       snapshot.hasData
-                                          ? snapshot.data![0]['temp'].toString()
+                                          ? snapshot.data![0]['temp']
                                           : '0',
                                       style: TextStyle(
                                           color: Colors.redAccent,

@@ -3,8 +3,23 @@ import 'package:nitroplanter/pages/monitoring/MonitoringListComponent.dart';
 import 'package:nitroplanter/pages/monitoring/temperature/TemperatureComponent.dart';
 
 class MonitoringMenu extends StatefulWidget {
-  const MonitoringMenu({Key? key}) : super(key: key);
-
+  final String token;
+  final String userId;
+  final List idData;
+  final List plant;
+  final List humidity;
+  final List waterAmount;
+  final List schedule;
+  const MonitoringMenu({
+    Key? key,
+    required this.token,
+    required this.userId,
+    required this.plant,
+    required this.humidity,
+    required this.waterAmount,
+    required this.schedule,
+    required this.idData,
+  }) : super(key: key);
   @override
   _MonitoringMenuState createState() => _MonitoringMenuState();
 }
@@ -52,11 +67,24 @@ class _MonitoringMenuState extends State<MonitoringMenu> {
                           ],
                         ),
                       ),
-                      Expanded(child: TemperatureComponent(), flex: 2),
+                      Expanded(
+                          child: TemperatureComponent(
+                              token: widget.token, userId: widget.userId),
+                          flex: 2),
                     ],
                   ),
                   flex: 2),
-              Expanded(child: MonitoringListComponent(), flex: 3),
+              Expanded(
+                  child: MonitoringListComponent(
+                    token: widget.token,
+                    userId: widget.userId,
+                    plant: widget.plant,
+                    waterAmount: widget.waterAmount,
+                    schedule: widget.schedule,
+                    humidity: widget.humidity,
+                    idData: widget.idData,
+                  ),
+                  flex: 3),
             ],
           ),
         ),

@@ -1,16 +1,29 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 
 class SchedulePlantComponent extends StatefulWidget {
-  final List list;
-  final List plant;
-  final List schedule;
+  final String token;
+  final String userId;
+  final List idData;
+  final List plant2;
+  final List humidity;
+  final List waterAmount;
+  final List schedule2;
+  final List plantParameterFirebase;
+  // final List dataFirebase;
   // SchedulePlantComponent({required this.list});
   const SchedulePlantComponent({
     Key? key,
-    required this.list,
-    required this.plant,
-    required this.schedule,
+    required this.token,
+    required this.userId,
+    required this.plant2,
+    required this.humidity,
+    required this.waterAmount,
+    required this.schedule2,
+    required this.idData,
+    required this.plantParameterFirebase,
   }) : super(key: key);
 
   @override
@@ -24,23 +37,26 @@ class _PlantComponentState extends State<SchedulePlantComponent> {
   late List<String> tambahNilai;
   late List<TextEditingController> _controllersPlant;
   late List<TextEditingController> _controllersWater;
+  String urlMaster =
+      "https://nitroplanterfirebase-default-rtdb.asia-southeast1.firebasedatabase.app/";
 
   @override
   void initState() {
+    print(widget.waterAmount);
     super.initState();
-    selectedPlant = List<String>.generate(widget.list.length, (counter) => "");
-    tambahNilai = List<String>.generate(
-        widget.list.length, (counter) => widget.list[counter]['water_amount']);
-    selectedSchedule =
-        List<String>.generate(widget.list.length, (counter) => "");
-    _controllersPlant = List.generate(
-        widget.list.length,
-        (counter) =>
-            TextEditingController(text: widget.list[counter]['plant']));
+
+    // print(plant);
+    // selectedPlant = List<String>.generate(widget.list.length, (counter) => "");
+    tambahNilai = List<String>.generate(widget.idData.length,
+        (counter) => widget.waterAmount[counter].toString());
+    selectedSchedule = List<String>.generate(
+        widget.idData.length, (counter) => widget.schedule2[counter]);
+    _controllersPlant = List.generate(widget.idData.length,
+        (counter) => TextEditingController(text: widget.plant2[counter]));
     _controllersWater = List.generate(
-        widget.list.length,
-        (counter) =>
-            TextEditingController(text: widget.list[counter]['water_amount']));
+        widget.idData.length,
+        (counter) => TextEditingController(
+            text: widget.waterAmount[counter].toString()));
   }
 
   addWater(i) {
@@ -64,6 +80,69 @@ class _PlantComponentState extends State<SchedulePlantComponent> {
   editDataPlant(id, plant) async {
     var url = "http://192.168.43.7/nitroplanter/editdataPlant.php";
     http.post(Uri.parse(url), body: {"id": id, "plant": plant});
+  }
+
+  editDataAir(i, waterAmount) async {
+    print(widget.userId);
+    print(widget.idData[i]);
+
+    Uri url;
+
+    url = Uri.parse("$urlMaster/plant_controller/" +
+        widget.userId +
+        "/" +
+        widget.idData[i] +
+        ".json?auth=" +
+        widget.token);
+
+    await http.patch(
+      url,
+      body: json.encode({
+        "water_amount": waterAmount,
+      }),
+    );
+  }
+
+  editDataTanaman(i, plantData) async {
+    print(widget.userId);
+    print(widget.idData[i]);
+
+    Uri url;
+
+    url = Uri.parse("$urlMaster/plant_controller/" +
+        widget.userId +
+        "/" +
+        widget.idData[i] +
+        ".json?auth=" +
+        widget.token);
+
+    await http.patch(
+      url,
+      body: json.encode({
+        "plant": plantData,
+      }),
+    );
+  }
+
+  editDataJadwal(i, scheduleData) async {
+    print(widget.userId);
+    print(widget.idData[i]);
+
+    Uri url;
+
+    url = Uri.parse("$urlMaster/plant_controller/" +
+        widget.userId +
+        "/" +
+        widget.idData[i] +
+        ".json?auth=" +
+        widget.token);
+
+    await http.patch(
+      url,
+      body: json.encode({
+        "schedule": scheduleData,
+      }),
+    );
   }
 
   editDataWater(id, waterAmount) async {
@@ -96,9 +175,10 @@ class _PlantComponentState extends State<SchedulePlantComponent> {
   ];
   @override
   Widget build(BuildContext context) {
+    // print(widget.idData.length);
     return ListView.builder(
         // ignore: unnecessary_null_comparison
-        itemCount: widget.list == null ? 0 : widget.list.length,
+        itemCount: widget.idData.length == 0 ? 0 : widget.idData.length,
         itemBuilder: (context, i) {
           return Container(
             child: Stack(
@@ -159,10 +239,11 @@ class _PlantComponentState extends State<SchedulePlantComponent> {
                             ),
                             child: Focus(
                               onFocusChange: (value) {
-                                print(_controllersPlant[i].text);
-                                print(widget.list[i]['id']);
-                                editDataPlant(widget.list[i]['id'],
-                                    _controllersPlant[i].text);
+                                // print(_controllersPlant[i].text);
+                                // print(widget.list[i]['id']);
+                                editDataTanaman(i, _controllersPlant[i].text);
+                                // editDataPlant(widget.list[i]['id'],
+                                //     _controllersPlant[i].text);
                               },
                               child: TextField(
                                   controller: _controllersPlant[i],
@@ -209,13 +290,15 @@ class _PlantComponentState extends State<SchedulePlantComponent> {
                               underline: SizedBox(),
                               isExpanded: true,
                               dropdownColor: Color.fromRGBO(78, 204, 111, 1),
-                              value: selectedSchedule[i].isEmpty
-                                  ? widget.list[i]['schedule'].toString()
-                                  : selectedSchedule[i].toString(),
-                              items: widget.schedule.map((items) {
+                              value:
+                                  //  selectedSchedule[i].isEmpty
+                                  //     ? widget.list[i]['schedule'].toString()
+                                  //     :
+                                  selectedSchedule[i].toString(),
+                              items: widget.plantParameterFirebase.map((items) {
                                 return DropdownMenuItem(
-                                    value: items['schedule'].toString(),
-                                    child: Text(items['schedule'].toString(),
+                                    value: items.toString(),
+                                    child: Text(items.toString(),
                                         style: TextStyle(
                                             color: Colors.white,
                                             fontSize: 15)));
@@ -223,8 +306,9 @@ class _PlantComponentState extends State<SchedulePlantComponent> {
                               onChanged: (value) {
                                 selectedSchedule[i] = value.toString();
                                 setState(() {
-                                  editDataSchedule(
-                                      widget.list[i]['id'], value.toString());
+                                  editDataJadwal(i, value.toString());
+                                  // editDataSchedule(
+                                  //     widget.list[i]['id'], value.toString());
                                 });
                               },
                             ),
@@ -262,9 +346,10 @@ class _PlantComponentState extends State<SchedulePlantComponent> {
                                       onTap: () {
                                         setState(() {
                                           minWater(i);
-                                          editDataWater(widget.list[i]['id'],
-                                              _controllersWater[i].text);
-                                          // print(_controllersWater[i].text);
+
+                                          editDataAir(
+                                              i, _controllersWater[i].text);
+                                          print(_controllersWater[i].text);
                                         });
                                       },
                                     ),
@@ -280,10 +365,11 @@ class _PlantComponentState extends State<SchedulePlantComponent> {
                                   ),
                                   child: Focus(
                                     onFocusChange: (value) {
-                                      print(_controllersWater[i].text);
-                                      print(widget.list[i]['id']);
-                                      editDataWater(widget.list[i]['id'],
-                                          _controllersWater[i].text);
+                                      // print(_controllersWater[i].text);
+                                      // print(widget.list[i]['id']);
+                                      editDataAir(i, _controllersWater[i].text);
+                                      // editDataWater(widget.list[i]['id'],
+                                      //     _controllersWater[i].text);
                                     },
                                     child: TextField(
                                         keyboardType: TextInputType.name,
@@ -311,9 +397,9 @@ class _PlantComponentState extends State<SchedulePlantComponent> {
                                       onTap: () {
                                         setState(() {
                                           addWater(i);
-                                          editDataWater(widget.list[i]['id'],
-                                              _controllersWater[i].text);
-                                          // print(_controllersWater[i].text);
+                                          editDataAir(
+                                              i, _controllersWater[i].text);
+                                          print(_controllersWater[i].text);
                                         });
                                       },
                                     ),
