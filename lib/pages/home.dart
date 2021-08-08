@@ -23,7 +23,7 @@ class _MainMenuState extends State<MainMenu> {
   late List schedule = [];
   late List idData = [];
   String urlMaster =
-      "https://nitroplanterfirebase-default-rtdb.asia-southeast1.firebasedatabase.app/";
+      "https://nitroplanter-62950-default-rtdb.asia-southeast1.firebasedatabase.app/";
 
   @override
   void initState() {

@@ -40,7 +40,7 @@ class _TemperatureComponentState extends State<TemperatureComponent> {
   Future<List> getTemperature() async {
     List dataFirebaseTemperature = [];
     final response = await http.get(Uri.parse(
-        'https://nitroplanterfirebase-default-rtdb.asia-southeast1.firebasedatabase.app/temperature/' +
+        'https://nitroplanter-62950-default-rtdb.asia-southeast1.firebasedatabase.app/temperature/' +
             widget.userId +
             '.json?auth=' +
             widget.token));

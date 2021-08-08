@@ -28,7 +28,7 @@ class _MyAppState extends State<MyApp> {
       new TextEditingController();
 
   String urlMaster =
-      "https://nitroplanterfirebase-default-rtdb.asia-southeast1.firebasedatabase.app/";
+      "https://nitroplanter-62950-default-rtdb.asia-southeast1.firebasedatabase.app/";
 
   Future<String> login() async {
     return 'login';
@@ -59,7 +59,7 @@ class _MyAppState extends State<MyApp> {
       }
       await http.post(
         Uri.parse(
-            'https://nitroplanterfirebase-default-rtdb.asia-southeast1.firebasedatabase.app/temperature/' +
+            'https://nitroplanter-62950-default-rtdb.asia-southeast1.firebasedatabase.app/temperature/' +
                 userId +
                 '.json?auth=' +
                 token),
@@ -72,7 +72,7 @@ class _MyAppState extends State<MyApp> {
 
   cobalogin() async {
     Uri url = Uri.parse(
-        "https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=AIzaSyBBoVFz_gVN5e3LIqi7ukxjLTYiFgfQu9w");
+        "https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=AIzaSyBI-drA3sxmx_QKSNd_GR2SoTvX3k_AZrs");
 
     try {
       var response = await http.post(
@@ -123,7 +123,7 @@ class _MyAppState extends State<MyApp> {
 
   cobadaftar() async {
     Uri url = Uri.parse(
-        "https://identitytoolkit.googleapis.com/v1/accounts:signUp?key=AIzaSyBBoVFz_gVN5e3LIqi7ukxjLTYiFgfQu9w");
+        "https://identitytoolkit.googleapis.com/v1/accounts:signUp?key=AIzaSyBI-drA3sxmx_QKSNd_GR2SoTvX3k_AZrs");
 
     try {
       var response = await http.post(
